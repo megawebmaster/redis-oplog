@@ -1,9 +1,8 @@
 # Welcome to Redis Oplog
 
-
 ### LICENSE: MIT
 
-[![Build Status](https://api.travis-ci.org/cult-of-coders/redis-oplog.svg?branch=master)](https://travis-ci.org/cult-of-coders/redis-oplog) [![Backers on Open Collective](https://opencollective.com/redis-oplog/backers/badge.svg)](#backers) [![Sponsors on Open Collective](https://opencollective.com/redis-oplog/sponsors/badge.svg)](#sponsors)
+[![Build Status](https://api.travis-ci.com/megawebmaster/redis-oplog.svg?branch=master)](https://api.travis-ci.com/megawebmaster/redis-oplog.svg?branch=master) [![Backers on Open Collective](https://opencollective.com/redis-oplog/backers/badge.svg)](#backers) [![Sponsors on Open Collective](https://opencollective.com/redis-oplog/sponsors/badge.svg)](#sponsors)
 
 ## RedisOplog
 
@@ -15,8 +14,7 @@ Incrementally adoptable & works with your current Meteor project.
 ## Installation
 
 ```bash
-meteor add cultofcoders:redis-oplog
-meteor add disable-oplog
+meteor add megawebmaster:redis-oplog
 ```
 
 Configure it via Meteor settings:
@@ -58,9 +56,12 @@ meteor run --settings settings.json
 RedisOplog is fully backwards compatible, so there won't be any change in how you use Meteor, unless you want to fine-tune your application for absolute performance.
 
 To make sure it is compatible with other packages which extend the `Mongo.Collection` methods, make sure you go to `.meteor/packages`
-and put `cultofcoders:redis-oplog` as the first option.
+and put `megawebmaster:redis-oplog` as the first option.
 
 RedisOplog does not work with _insecure_ package, which is used for bootstrapping your app.
+
+Also make sure that your production system does not generate `MONGO_OPLOG_URL` to disable MongoDB Oplog tailing.
+If you need to forcibly disable it please run `meteor add disable-oplog`.
 
 ## Stats
 
@@ -68,7 +69,7 @@ If you are interested in viewing how many observers are registered or memory con
 
 ```
 meteor shell
-import { RedisOplog } from 'meteor/cultofcoders:redis-oplog';
+import { RedisOplog } from 'meteor/megawebmaster:redis-oplog';
 
 // works only server-side
 RedisOplog.stats()
@@ -79,10 +80,6 @@ RedisOplog.stats()
 1.  Just add RedisOplog, you will already see big performance improvements
 2.  Fine-tune your reactivity by using custom namespaces and channels
 3.  Implement your own custom reactivity by using Redis Vent
-
-### Events for Meteor (+ Redis Oplog, Grapher and GraphQL/Apollo)
-
-*   Meteor Night 2018 Slide: [Arguments for Meteor](https://drive.google.com/file/d/1Tx9vO-XezO3DI2uAYalXPvhJ-Avqc4-q/view) - Theodor Diaconu, CEO of Cult of Coders: “Redis Oplog, Grapher, and Apollo Live.
 
 ### [Optimistic UI](docs/optimistic_ui.md)
 
@@ -108,11 +105,6 @@ Find out how you can customize your reactivity and enable it across multiple lan
 
 If you have different workers/services that perform updates to mongo and they exist outside Meteor, you can still trigger
 reactivity for the Meteor instances with a few lines of code.
-
-## Premium Support
-
-If you are looking to scale your business using this package and you need to have your back covered. We are here to help. Feel free to contact us
-at contact@cultofcoders.com.
 
 ## Contributors
 
