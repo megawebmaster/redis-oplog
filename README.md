@@ -11,6 +11,11 @@ into building reactive applications, highly scalable chat apps, games, and added
 
 Incrementally adoptable & works with your current Meteor project.
 
+### Difference from `cultofcoders:redis-oplog`
+
+This package uses `ioredis` as its Redis client which has full support of Redis including Sentinel. Thanks to that you
+can achieve high availability of Redis cluster and configure connection to your needs.
+
 ## Installation
 
 ```bash
