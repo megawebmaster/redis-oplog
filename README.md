@@ -17,6 +17,11 @@ Incrementally adoptable & works with your current Meteor project.
 meteor add megawebmaster:redis-oplog
 ```
 
+> IMPORTANT!
+>
+> To make sure it is compatible with other packages which extend the `Mongo.Collection` methods, make sure you go to `.meteor/packages`
+and put `megawebmaster:redis-oplog` as the first option.
+
 Configure it via Meteor settings:
 
 ```
@@ -54,9 +59,6 @@ meteor run --settings settings.json
 ## Notes
 
 RedisOplog is fully backwards compatible, so there won't be any change in how you use Meteor, unless you want to fine-tune your application for absolute performance.
-
-To make sure it is compatible with other packages which extend the `Mongo.Collection` methods, make sure you go to `.meteor/packages`
-and put `megawebmaster:redis-oplog` as the first option.
 
 RedisOplog does not work with _insecure_ package, which is used for bootstrapping your app.
 
