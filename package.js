@@ -1,63 +1,59 @@
+// eslint-disable-next-line
 Package.describe({
-    name: 'megawebmaster:redis-oplog',
-    version: '3.0.0',
-    // Brief, one-line summary of the package.
-    summary: "Replacement for Meteor's MongoDB oplog implementation",
-    // URL to the Git repository containing the source code for this package.
-    git: 'https://github.com/megawebmaster/redis-oplog',
-    // By default, Meteor will default to using README.md for documentation.
-    // To avoid submitting documentation, set this field to null.
-    documentation: 'README.md'
+  name: 'megawebmaster:redis-oplog',
+  version: '4.0.0',
+  // Brief, one-line summary of the package.
+  summary: 'Replacement for Meteor\'s MongoDB oplog implementation',
+  // URL to the Git repository containing the source code for this package.
+  git: 'https://github.com/megawebmaster/redis-oplog',
+  // By default, Meteor will default to using README.md for documentation.
+  // To avoid submitting documentation, set this field to null.
+  documentation: 'README.md'
 });
 
+// eslint-disable-next-line
 Npm.depends({
-    ioredis: '4.26.0',
-    'deep-extend': '0.5.0',
-    'lodash.clonedeep': '4.5.0'
+  ioredis: '4.26.0',
 });
 
-Package.onUse(function(api) {
-    api.versionsFrom('1.11.1');
-    api.use([
-        'underscore',
-        'ecmascript',
-        'ejson',
-        'minimongo',
-        'mongo',
-        'random',
-        'ddp-server',
-        'diff-sequence',
-        'id-map',
-        'mongo-id',
-        'tracker'
-    ]);
+// eslint-disable-next-line
+Package.onUse(function (api) {
+  api.use([
+    'underscore',
+    'ecmascript',
+    'ejson',
+    'minimongo',
+    'mongo',
+    'random',
+    'ddp-server',
+    'diff-sequence',
+    'id-map',
+    'mongo-id',
+    'tracker'
+  ]);
 
-    api.mainModule('redis-oplog.js', 'server');
-    api.mainModule('redis-oplog.client.js', 'client');
+  api.mainModule('redis-oplog.js', 'server');
 });
 
-Package.onTest(function(api) {
-    api.use('megawebmaster:redis-oplog');
+// eslint-disable-next-line
+Package.onTest(function (api) {
+  api.use('megawebmaster:redis-oplog');
 
-    // extensions
-    api.use('aldeed:collection2@3.0.0');
-    api.use('reywood:publish-composite@1.5.2');
-    api.use('natestrauser:publish-performant-counts@0.1.2');
-    api.use('socialize:user-presence@0.4.0');
+  // extensions
+  api.use('aldeed:collection2@3.4.1');
+  api.use('reywood:publish-composite@1.7.3');
 
-    api.use('ecmascript');
-    api.use('tracker');
-    api.use('mongo');
-    api.use('random');
-    api.use('accounts-password');
-    api.use('matb33:collection-hooks@0.8.4');
-    api.use('alanning:roles@1.2.16');
+  api.use('ecmascript');
+  api.use('tracker');
+  api.use('mongo');
+  api.use('random');
+  api.use('matb33:collection-hooks@1.1.0');
 
-    api.use(['meteortesting:mocha']);
+  api.use(['meteortesting:mocha']);
 
-    api.mainModule('testing/main.server.js', 'server');
-    api.addFiles('testing/publishComposite/boot.js', 'server');
-    api.addFiles('testing/optimistic-ui/boot.js', 'server');
+  api.mainModule('testing/main.server.js', 'server');
+  api.addFiles('testing/publishComposite/boot.js', 'server');
+  api.addFiles('testing/optimistic-ui/boot.js', 'server');
 
-    api.mainModule('testing/main.client.js', 'client');
+  api.mainModule('testing/main.client.js', 'client');
 });

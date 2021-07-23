@@ -1,6 +1,7 @@
 ## Configuration
 
 You have access to the following events:
+
 - end
 - connect
 - reconnect
@@ -27,7 +28,7 @@ _.extend(Config.redisExtras.events, {
 
 ## Notes
 
-Since we have the logic of refreshing an observable collection, we can make it so it falls back to polling.
-But polling is very dangerous and very expensive, so we should avoid it at all costs, however
-this could be implemented and customized per collection, but honestly, your redis-server needs to have
-high-availability, since it's a core component of your app.
+Since we have the logic of refreshing an observable collection, we can make it so it falls back to polling. But polling
+is very dangerous and very expensive, so we should avoid it at all costs, however this could be implemented and
+customized per collection, but honestly, your redis-server needs to have high-availability, since it's a core component
+of your app.

@@ -1,11 +1,12 @@
 ## Fine-Tuning
 
-Now that we have a generic idea of how this works, we can make some fine-tuning that will **dramatically** increase the speed of your highly loaded app.
+Now that we have a generic idea of how this works, we can make some fine-tuning that will **dramatically** increase the
+speed of your highly loaded app.
 
 ### Custom Channels
 
-A very common scenario where this can be used is a chat application. Usually when we create a chat app, we have a parent "Thread",
-and each message will have threadId pointing to our thread.
+A very common scenario where this can be used is a chat application. Usually when we create a chat app, we have a
+parent "Thread", and each message will have threadId pointing to our thread.
 
 ```js
 Meteor.publish('messages_by_thread', function (threadId) {
@@ -18,9 +19,9 @@ Meteor.publish('messages_by_thread', function (threadId) {
 })
 ```
 
-Now if you insert into `Messages` collection like you are used to, you will not see any changes. Because
-the default channel it will push to is "messages" (because that's the name of our collection), but we are listening only to `threads::${threadId}::messages`, so
-the solution is this:
+Now if you insert into `Messages` collection like you are used to, you will not see any changes. Because the default
+channel it will push to is "messages" (because that's the name of our collection), but we are listening only
+to `threads::${threadId}::messages`, so the solution is this:
 
 ```js
 Messages.insert(data, {
@@ -38,10 +39,11 @@ Messages.remove(messageId, {
 })
 ```
 
-By doing this you have a very focused layer of reactivity. What happens in the back, is that instead of having your processor process every incomming
-event in "messages" channel and figuring how it affects *all live queries*.
+By doing this you have a very focused layer of reactivity. What happens in the back, is that instead of having your
+processor process every incomming event in "messages" channel and figuring how it affects *all live queries*.
 
-Note: Even if you use `channel`, making a change to an `_id` will still push to `messages::_id`, so it will still send 2 events to Redis.
+Note: Even if you use `channel`, making a change to an `_id` will still push to `messages::_id`, so it will still send 2
+events to Redis.
 
 ### Namespacing
 
@@ -68,7 +70,8 @@ Users.insert(data, {
 
 You could have achieved the same thing with channels. But the idea is to make it easy.
 
-Note: Even if you use `namespace`, making a change to an `_id` from Users will still push to `users::_id`, so it will still send 2 events to Redis.
+Note: Even if you use `namespace`, making a change to an `_id` from Users will still push to `users::_id`, so it will
+still send 2 events to Redis.
 
 ### Allowed Options For Cursors
 
@@ -111,9 +114,9 @@ Meteor.publish('users', function (companyId) {
 
 ### Configuration at collection level
 
-You may want to configure reactivity at the collection level.
-This can have several applications, for example you have collections that don't require reactivity,
-or you have a multi-tenant system, and you want to laser-focus reactivity per tenant.
+You may want to configure reactivity at the collection level. This can have several applications, for example you have
+collections that don't require reactivity, or you have a multi-tenant system, and you want to laser-focus reactivity per
+tenant.
 
 ```js
 const Tasks = new Mongo.Collection('tasks');
@@ -150,17 +153,18 @@ Tasks.configureRedisOplog({
 })
 ```
 
-These configurations are applied last, they are the final configuration extension point,
-so you have to manage the situation in which you have multiple namespace configurations.
+These configurations are applied last, they are the final configuration extension point, so you have to manage the
+situation in which you have multiple namespace configurations.
 
-Inside the `mutation()` configuration function, in the `mutationObject` (the second parameter) you receive
-data based on the event for example:
+Inside the `mutation()` configuration function, in the `mutationObject` (the second parameter) you receive data based on
+the event for example:
 
 - For insert: `{event, doc}`, where event equals `Events.INSERT`
 - For update/upsert: `{event, selector, modifier}`, where event equals `Events.UPDATE`
 - For remove: `{event, selector}`, where event equals `Events.REMOVE`
 
 The `Events` object can be imported like this:
+
 ```js
 import {Events} from 'meteor/megawebmaster:redis-oplog';
 ```
@@ -168,6 +172,7 @@ import {Events} from 'meteor/megawebmaster:redis-oplog';
 The mutation() function is called before the actual mutation takes place.
 
 To illustrate this better, if you have a collection where you don't need reactivity:
+
 ```js
 const Tasks = new Mongo.Collection('tasks');
 
@@ -178,7 +183,9 @@ Tasks.configureRedisOplog({
 })
 ```
 
-If, for example, you don't have a multi-tenant system and you may want to laser-focus messages inside a thread this can work:
+If, for example, you don't have a multi-tenant system and you may want to laser-focus messages inside a thread this can
+work:
+
 ```js
 Messages.configureRedisOplog({
     mutation(options, {event, selector, modifier, doc}) { 
@@ -205,15 +212,20 @@ Messages.configureRedisOplog({
 })
 ```
 
-Using this may be much more complicated than just specifying namespaces wherever you do finds, mutations, however, this can be very well suited when you
-have a multi-tenant system, many places in which you perform updates, or you want to easily disable reactivity for a collection,
-or you want to fine-tune redis-oplog with in a non-instrusive way inside your existing publications or methods.
+Using this may be much more complicated than just specifying namespaces wherever you do finds, mutations, however, this
+can be very well suited when you have a multi-tenant system, many places in which you perform updates, or you want to
+easily disable reactivity for a collection, or you want to fine-tune redis-oplog with in a non-instrusive way inside
+your existing publications or methods.
 
-`shouldIncludePrevDocument` Allows you to enable passing through the previous document through the redis event messages. The default value for
-`shouldIncludePrevDocument` is `false` but it can be enabled for each collection where you might need the previous document state on receiving updates
+`shouldIncludePrevDocument` Allows you to enable passing through the previous document through the redis event messages.
+The default value for
+`shouldIncludePrevDocument` is `false` but it can be enabled for each collection where you might need the previous
+document state on receiving updates
 
 Example:
-For a collection with `shouldIncludePrevDocument: false` the payload 'd' (document) field will contain only the document id after an update
+For a collection with `shouldIncludePrevDocument: false` the payload 'd' (document) field will contain only the document
+id after an update
+
 ```
 { 
     u: 'event_id', 
@@ -222,7 +234,9 @@ For a collection with `shouldIncludePrevDocument: false` the payload 'd' (docume
     d: { _id: 'document_id' } 
 }
 ```
+
 If that same collection now had `shouldIncludePrevDocument: true` the payload would now look like:
+
 ```
 { 
     u: 'event_id', 
@@ -232,16 +246,15 @@ If that same collection now had `shouldIncludePrevDocument: true` the payload wo
 }
 ```
 
-
 ### Synthetic Mutation
 
-This is to emulate a write to the database that you don't actually need persisted. Basically,
-your publication would behave as if an actual update happened in the database.
+This is to emulate a write to the database that you don't actually need persisted. Basically, your publication would
+behave as if an actual update happened in the database.
 
 You will use this for showing live things that happen, things that you don't want saved.
 
-For example you have a game or a chat, and you want to transmit to the other user that he is typing his message.
-You don't need to store `isTyping` in the database to do this.
+For example you have a game or a chat, and you want to transmit to the other user that he is typing his message. You
+don't need to store `isTyping` in the database to do this.
 
 ```js
 import { SyntheticMutator } from 'meteor/megawebmaster:redis-oplog';

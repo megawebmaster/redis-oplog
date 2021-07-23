@@ -1,39 +1,43 @@
-import './lib/mongo//mongoCollectionNames';
+import './lib/mongo/mongoCollectionNames';
 
-import { RedisPipe, Events } from './lib/constants';
+import { Events, RedisPipe } from './lib/constants';
 import { Meteor } from 'meteor/meteor';
 import init from './lib/init';
 import Config from './lib/config';
 import { getRedisListener, getRedisPusher } from './lib/redis/getRedisClient';
-import SyntheticMutator from './lib/mongo/SyntheticMutator';
-import ObservableCollection from './lib/cache/ObservableCollection';
-import Vent from './lib/vent/Vent';
+import ObservableCollection from './lib/cache/observableCollection';
+import { addToWatch, removeFromWatch } from './lib/redis/watchManager';
+import { dispatchInsert, dispatchRemove, dispatchUpdate } from './lib/redis/customPublish';
 
 const RedisOplog = {
-    init,
+  init
 };
 
 // Warnings
-Meteor.startup(function() {
-    if (Package['insecure']) {
-        console.log('RedisOplog does not support the insecure package.');
-    }
+Meteor.startup(function () {
+  // eslint-disable-next-line
+  if (Package.insecure) console.log('RedisOplog does not support the insecure package.');
 });
 
 export {
-    RedisOplog,
-    SyntheticMutator,
-    ObservableCollection,
-    RedisPipe,
-    Config,
-    Events,
-    Vent,
-    getRedisListener,
-    getRedisPusher,
+  RedisOplog,
+  ObservableCollection,
+  RedisPipe,
+  Config,
+  Events,
+  getRedisListener,
+  getRedisPusher,
+  addToWatch,
+  removeFromWatch,
+  dispatchUpdate,
+  dispatchInsert,
+  dispatchRemove
 };
 
 if (process.env.REDIS_OPLOG_SETTINGS) {
-    init(JSON.parse(process.env.REDIS_OPLOG_SETTINGS));
+  init(JSON.parse(process.env.REDIS_OPLOG_SETTINGS));
 } else if (Meteor.settings.redisOplog) {
-    init(Meteor.settings.redisOplog);
+  init(Meteor.settings.redisOplog);
+} else {
+  console.error('RedisOplog: No settings found');
 }
